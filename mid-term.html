@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript">
+		google.charts.load('current',{'packages':['corechart']});
+		google.charts.load('current', {'packages':['treemap']});
+		google.charts.load('current',{'packages':['corechart', 'bar']});
+		google.charts.load("current", {packages: ["scatter"]});
+		google.charts.load('current', {'packages':['table']});
+		google.charts.setOnLoadCallback(drawSheets);
+  
+	function drawSheets() {
+			drawSheetName('EDUCATION(in million)', 'SELECT A,C,D,E,F,G',
+						  EDUCATIONResponseHandler);
+			drawSheetName('HEALTH(in million)', 'SELECT A,C',
+						  HEALTHResponseHandler);
+			drawSheetName('EDUCATION(in million)', 'SELECT A, G',
+			              EDUCATIONLATESTResponseHandler);
+			drawSheetName('HEALTH(in million)', 'SELECT A,C,D,E,F,G',
+			              HEALTHALLResponseHandler);
+			drawSheetName('EDUGDP', 'SELECT A,C,D,E,F,G,H,I,J,K,L',
+			              EDUGDPResponseHandler);	
+			drawSheetName('USAHEALTHGDP', 'SELECT A,B,C',
+			             USAHGResponseHandler);
+			drawSheetName('HEALTHGDPALL', 'SELECT A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U',
+			             HGALLResponseHandler);						  
+			drawSheetName('MILIT', 'SELECT A,B,C,D,E,F,G,H,I,J,K',
+						  MILITResponseHandler);	
+			drawSheetName('BUBBLE2013', 'SELECT A,B,C,D',
+						  EHMResponseHandler);	
+			drawSheetName('EDUMILI', 'SELECT A,B,C,D,E,F,G,H,I,J,K',
+						  EMResponseHandler);
+			drawSheetName('EDUGDPPC', 'SELECT A,B,C,D,E,F,G,H,I,J,K',
+						  EGPCResponseHandler);	
+			drawSheetName('HGPC', 'SELECT A,B,C,D,E,F,G,H,I,J,K',
+						  HGPCResponseHandler);	
+			drawSheetName('HGPCUSA', 'SELECT A,B,C',
+						  HGPCUSAResponseHandler);	
+            drawSheetName('EDUGDPPERCENT', 'SELECT A,S',
+						  EDUGDPPERCENTResponseHandler);
+			drawSheetName('EDUGDPPERCENT', 'SELECT A,S',
+						  EDUGDPPERCENTResponseHandler);			  
+			drawSheetName('EDUCHANGE(in million)', 'SELECT A,C,D,E,F,G',
+						  EDUCHANGEResponseHandler);
+			drawSheetName('ECP', 'SELECT A,C,D,E,F,G',
+						  ECPResponseHandler);
+			drawSheetName('EDUCOA', 'SELECT A,G',
+						  ECOAResponseHandler);
+			drawSheetName('EDUCOA', 'SELECT A,H',
+						  ECOARATEResponseHandler);
+			drawSheetName('HCWF', 'SELECT A,B,C,D,E',
+						  HCWFResponseHandler);	
+			drawSheetName('HEALTHCHANGERATE', 'SELECT A,F,G',
+						  HEALTHRATEResponseHandler);	
+            drawSheetName('HEALTHCHANGE(in million)', 'SELECT I,J,K,L,M,N,O,P,Q,R,S,T',
+						  HCALLResponseHandler);	
+			drawSheetName('HEALTHCHANGERATE', 'SELECT A,C,D,E,F,G',
+						  HRALLResponseHandler);
+            drawSheetName('TREEMAP','SELECT A,B,C,D',
+			              HEALTHTREEResponseHandler);						  
+			}
+
+    function drawSheetName(sheetName, query, responseHandler) {
+       var queryString = encodeURIComponent(query);
+		  	var query = new google.visualization.Query(
+				'https://docs.google.com/spreadsheets/d/1wQ5hJLtRrO0e1wsMh-DnFzgUcqz_0LhioTsT62XN8bo/gviz/tq?sheet='
+				 + sheetName + '&headers=1&tq=' + queryString);
+			  query.send(responseHandler);
+		}
+
+    function checkError(response) {
+       if (response.isError()) {
+				alert('Error in query: ' + response.getMessage() +
+					' ' + response.getDetailedMessage());
+				return;
+			}
+		}
+	
+	function EDUCATIONResponseHandler(response) {
+        checkError(response);
+		    var data = response.getDataTable();
+        data.sort({column: 5, desc:true});
+       var options = {
+       title: 'Education Expenditure of 10 Countries in Million(2009-2013)',
+       vAxis: {title: 'Year'},
+       hAxis: {title: 'Country Names'}
+     };
+
+     var chart = new google.visualization.LineChart(document.getElementById('EDUCATION_div'));
+     chart.draw(data, options);
+    }
+
+    function EDUCATIONLATESTResponseHandler(response) {
+        checkError(response);
+	    var data = response.getDataTable();
+	    var options = {
+          title: 'Education Expenditure in 2013',
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('EDUCATIONLATEST_3d'));
+        chart.draw(data, options);
+      }
+	    
+	function HEALTHResponseHandler(response) {
+		checkError(response);
+    var data = response.getDataTable();
+    var options = {
+		  colorAxis: {colors: ['#FF00FF', '#3498DB']}
+		};
+		var chart = new google.visualization.GeoChart(document.getElementById('HEALTH_div'));
+		chart.draw(data, options);
+	 }
+	    
+	function HEALTHALLResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column: 5, desc:true});
+
+			var options = {
+				height: 400,
+				vAxis: {title: 'Spending in millions ($)'},
+				hAxis: {title: 'Country'},
+				title: 'Health Expenditure from 2009-2013'
+			};
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('HEALTHALL_div'));
+			chart.draw(data, options);
+		}
+			
+    function EDUGDPResponseHandler(response) {
+	         checkError(response);
+             var data = response.getDataTable();
+             var options = {
+                 title: 'Compare Education Expenditure with GDP',
+                 vAxis: {title: 'Country'},
+				 hAxis: {title: 'Edu in Million & GDP in 100 Million'},
+				 colors: ['#4374E0', '#53A8FB','#17A589','#A3E4D7','#8E44AD','#C39BD3','#F4D03F','#FCF3CF','#ff4da6','#ffcce6'],
+				 chartArea:{left:20,top:0,width:'200%',height:'75%'},
+				 legend: {position: 'bottom'},
+                 isStacked: true
+            };
+             var chart = new google.visualization.SteppedAreaChart(document.getElementById('EDUGDP_div'));
+	         chart.draw(data, options);
+     }
+	 
+    function USAHGResponseHandler(response) {
+	         checkError(response);
+             var data = response.getDataTable();
+             var options = {
+                curveType: 'function',
+                legend: { position: 'bottom' },
+				colors:['#4374E0','#ff4da6'],
+				vAxis: {title: 'Healthcare Spending in millions($)' + '\n' + 'GDP in 10 millions($)'},
+				hAxis: {title: 'Year'},
+              };
+
+            var chart = new google.visualization.LineChart(document.getElementById('USAHG_chart'));
+
+            chart.draw(data, options);
+          }
+
+	function HGALLResponseHandler(response) {
+			         checkError(response);
+		             var data = response.getDataTable();
+
+								 var options = {
+		                title: 'Healthcare vs GDP',
+		                curveType: 'function',
+		                legend: { position: 'bottom' },
+										colors: ['#4374E0', '#53A8FB','#17A589','#A3E4D7','#8E44AD','#C39BD3','#F4D03F','#FCF3CF','#ff4da6','#ffcce6'],
+										vAxis: {title: 'Healthcare Spending in millions($)' + '\n' + 'GDP in 10 millions($)'},
+										hAxis: {title: 'Year'},
+    		             };
+
+		        var chart = new google.visualization.LineChart(document.getElementById('HGALL_div'));
+
+		        chart.draw(data, options);
+		   }
+	 	 
+    function MILITResponseHandler(response) {
+	         checkError(response);
+             var data = response.getDataTable();	 
+             var options = {
+               bars: 'horizontal' 
+              };
+           var chart = new google.visualization.BarChart(document.getElementById("MILIT_values"));
+           chart.draw(data, options);
+          }
+	 
+    function EHMResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+
+			      var options = {
+        title: 'Education Expenditure' + '\n' +
+               'Health Expenditure' + '\n' +
+			   'Military Expenditure',
+        hAxis: {title: 'Health Expenditure'},
+        vAxis: {title: 'Education Expenditure'},
+        bubble: {textStyle: {fontSize: 11}}
+      };
+
+      var chart = new google.visualization.BubbleChart(document.getElementById('EHM_chart_div'));
+      chart.draw(data, options);
+    }
+
+	function EMResponseHandler(response) {
+        checkError(response);
+		    var data = response.getDataTable();
+       var options = {
+       title: 'Education Expenditure(in million) vs Military Expenditure(in 10 million) 10 Countries(2009-2013)',
+       vAxis: {title: 'Year'},
+       hAxis: {title: 'Country Names'},
+	    colors: ['#4374E0', '#53A8FB','#17A589','#A3E4D7','#8E44AD','#C39BD3','#F4D03F','#FCF3CF','#ff4da6','#ffcce6'],
+     };
+
+     var chart = new google.visualization.LineChart(document.getElementById('EM_div'));
+     chart.draw(data, options);
+    }
+		
+	function EGPCResponseHandler(response) {
+        checkError(response);
+		var data = response.getDataTable();
+        var options = {
+          width: 600,
+          height: 400,
+		  legend: { position: 'top', maxLines: 3 },
+          bar: { groupWidth: '75%' },
+          isStacked: true,
+         };
+
+      var chart = new google.charts.Bar(document.getElementById("EGPC_values"));
+      chart.draw(data, google.charts.Bar.convertOptions(options));
+  }
+	
+	function HGPCResponseHandler(response) {
+        checkError(response);
+		var data = response.getDataTable();
+
+      var options = {
+        width: 600,
+        height: 400,
+        legend: { position: 'top', maxLines: 3 },
+        bar: {groupWidth: '75%'},
+        isStacked: true,
+		colors: ['#4374E0', '#53A8FB','#17A589','#A3E4D7','#8E44AD','#C39BD3','#F4D03F','#FCF3CF','#ff4da6','#ffcce6'],
+      };
+
+      var chart = new google.visualization.BarChart(document.getElementById('HGPC_stacked'));
+      chart.draw(data, options);
+  }
+			
+	function HGPCUSAResponseHandler(response) {
+        checkError(response);
+		var data = response.getDataTable();
+        var options = {
+          title: 'Health & GDP per capita (USA-2013)',
+          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('HGPCUSA_chart'));
+        chart.draw(data, options);
+      }
+	
+	function EDUGDPPERCENTResponseHandler(response) {
+			checkError(response);
+			var data = response.getDataTable();
+			data.sort({column:1, desc:true});
+			
+			var options = {
+				height: 800,
+				legend: 'none',
+				bars: 'horizontal',
+				annotations: {alwaysOutside: true},
+				title: 'Military Expenditure 2013 as % GDP',
+				vAxis: {title: 'Country'},
+				hAxis: {title: '%'}
+			};
+			var view = new google.visualization.DataView(data);
+			view.setColumns([0,1,
+					{ 
+						calc: function(dt, row) {
+		return Math.ceil(dt.getFormattedValue(row,1)) + '%';
+						},
+					sourceColumn: 1,
+					type: 'string',
+					role: 'annotation'
+					}]);
+			
+			var chart = new google.visualization.BarChart(
+						document.getElementById('EDUGDPPERCENT_div'));
+			chart.draw(view, options); 
+			
+		} 
+
+    function EDUCHANGEResponseHandler(response) {
+        checkError(response);
+		    var data = response.getDataTable();
+        data.sort({column: 5, desc:true});
+       var options = {
+       title: 'Education Expenditure Change of Ten Countries in Million(2009-2013)',
+       vAxis: {title: 'Year'},
+       hAxis: {title: 'Country Names'},
+	   bars: 'horizontal',
+	   width: 1000,
+     };
+
+			var chart = new google.visualization.ColumnChart(
+						document.getElementById('EDUCHANGE_div'));
+			chart.draw(data, options);
+		}
+			
+    function ECPResponseHandler(response) {
+        checkError(response);
+		    var data = response.getDataTable();
+		
+	        var options = {
+          width: 800,
+          height: 500,
+          chart: {
+            title: 'Education Expenditure Change Rate',
+          },
+          axes: {
+            x: {
+              0: {side: 'top'}
+            }
+          }
+        };
+
+        var chart = new google.charts.Scatter(document.getElementById('ECP_chart'));
+
+        chart.draw(data, google.charts.Scatter.convertOptions(options));
+	
+		
+		
+      }
+	    
+	function ECOAResponseHandler(response) {
+        checkError(response);
+		    var data = response.getDataTable();
+            data.sort({column: 1, desc:true});			
+	  var options = {
+          title: 'Education Change over Five Years',
+          vAxis: {title: 'Year'},
+          isStacked: true
+		  
+        };
+
+        var chart = new google.visualization.SteppedAreaChart(document.getElementById('ECOA_div'));
+
+        chart.draw(data, options);
+      }
+	 
+    function ECOARATEResponseHandler(response) {
+        checkError(response);
+		    var data = response.getDataTable();	 
+			data.sort({column: 1, desc:false});
+			 var options = {
+          title: 'Education Change Over All Rate',
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('ECOARATE_div'));
+        chart.draw(data, options);
+      }
+	  
+	function HCWFResponseHandler(response) {
+        checkError(response);
+		    var data = response.getDataTable();
+			data.sort({column: 1, desc:true});
+        var options = {
+          legend: 'none',
+          bar: { groupWidth: '100%' }, 
+          candlestick: {
+            fallingColor: { strokeWidth: 0, fill: '#6699ff' }, 
+            risingColor: { strokeWidth: 0, fill: '#ff33cc' }   
+          }
+        };
+
+        var chart = new google.visualization.CandlestickChart(document.getElementById('HCWF_div'));
+        chart.draw(data, options);
+      }
+
+	function HEALTHRATEResponseHandler(response) {
+		checkError(response);
+    var data = response.getDataTable();
+    var options = {
+		  colorAxis: {colors: ['#FF00FF', '#3498DB']}
+		};
+		var chart = new google.visualization.GeoChart(document.getElementById('HEALTHRATE_div'));
+		chart.draw(data, options);
+	 }
+ 
+	function HCALLResponseHandler(response) {
+		checkError(response);
+    var data = response.getDataTable();   
+    var options = {
+      title : 'Over All Health Care Expenditure Change of 10 Countries in 5 Years',
+      vAxis: {title: 'Year'},
+      hAxis: {title: 'Country'},
+      seriesType: 'bars',
+      series: {5: {type: 'line'}}
+    };
+
+    var chart = new google.visualization.ComboChart(document.getElementById('HCALL_div'));
+    chart.draw(data, options);
+  }
+	
+	function HRALLResponseHandler(response) {
+		checkError(response);
+        var data = response.getDataTable();  
+		
+	    var table = new google.visualization.Table(document.getElementById('HRALL_div'));
+
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+      }
+	
+	function HEALTHTREEResponseHandler(response) {
+		checkError(response);
+        var data = response.getDataTable();
+	var options = {
+          minColor: '#00FFFF',
+          midColor: '#FF00FF',
+          maxColor: '#00FF00',
+          showScale: true,
+          generateTooltip: showStaticTooltip
+        };
+        
+		tree = new google.visualization.TreeMap(document.getElementById('TREE_div'));
+        
+		
+		tree.draw(data, options);
+
+        function showStaticTooltip(row, size, value) {
+          return '<div style="background:#fff; padding:10px; border-style:solid">' +
+                 'Health Expenditure in 2013';
+        }
+	}
+	
+	
+	
+	
+	
+ </script>
+</head>
+<body>
+  <h1>6401 - MID TERM PROJECT</h1>
+  <h2>Tian Wang</h2>
+  
+    <h3>Education Expenditure of Ten Countries in Million(2009-2013)</h3> 
+    <div id="EDUCATION_div" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Education Expenditure in 2013</h3>
+    <div id="EDUCATIONLATEST_3d" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Health Expenditure of Ten Countries in Million(2009)</h3>
+	<div id="HEALTH_div" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Health expenditure & its change in 2013(showed by treemap)</h3>
+	<div id="TREE_div" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Health Expenditure from 2009-2013</h3>
+	<div id="HEALTHALL_div" style="width:900px; height:500px;"></div>
+	
+	<h3>Compare Education Expenditure with GDP</h3>
+	<div id="EDUGDP_div" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Healthcare vs GDP</h3>
+	<div id="HGALL_div" style="width: 900px; height: 500px"></div>
+	
+	<h3>Healthcare vs GDP of USA</h3>
+	<div id="USAHG_chart" style="width: 900px; height: 500px"></div>
+	
+	<h3>Military Expenditure in 2009-2013</h3>
+	<div id="MILIT_values" style="width: 900px; height: 300px;"></div>
+	
+	<h3>Education Expenditure & Health Expenditure with Military Expenditure as Size</h3>
+	<div id="EHM_chart_div" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Education Expenditure (in million) vs Military Expenditure (in 10 million) 10 Countries(2009-2013)</h3> 
+    <div id="EM_div" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Education Expenditure per capita(in million) vs Military Expenditure per capita(in 10 million) 10 Countries(2009-2013)</h3> 
+    <div id="EGPC_values" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Health Expenditure per capita(in million) vs Military Expenditure per capita(in 10 million) 10 Countries(2009-2013)</h3> 
+	<div id="HGPC_stacked" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Health & GDP per capita (USA-2013)</h3>
+	<div id="HGPCUSA_chart" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Military Expenditure 2013 as % GDP</h3>
+	<div id="EDUGDPPERCENT_div" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Education Expenditure Change of 10 Countries in Million(2009-2013)</h3>
+	<div id="EDUCHANGE_div" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Education Expenditure Change Rate</h3>
+	<div id="ECP_chart" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Education Change over Five Years</h3>
+	<div id="ECOA_div" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Education Change Over All Rate</h3>
+	<div id="ECOARATE_div" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Health Care Expenditure Waterfall Chart</h3>
+	<div id="HCWF_div" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Health Care Expenditure Change Rate (2012-2013) of 10 Countries</h3>
+	<div id="HEALTHRATE_div" style="width: 900px; height: 500px;"></div>
+	
+	<h3>Over All Health Care Expenditure Change of 10 Countries in 5 Years</h3>
+	<div id="HCALL_div" style="width: 900px; height: 500px;"></div>	
+	
+	<h3>Over All Health Care Expenditure Change Rate of 10 Countries in 5 Years</h3>
+	<div id="HRALL_div" style="width: 900px; height: 500px;"></div>	
+	
+	
+
+</body>
+</html>
