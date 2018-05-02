@@ -1,10 +1,10 @@
 # Visualization-Mid-term-Project
 
-DATS 6401
+# DATS 6401
 
-Individual Project
+# Individual Project
 
-Purpose
+# Purpose
 
 The purpose of this project is for you to continue learning and improving your skills in:
 
@@ -12,7 +12,7 @@ The purpose of this project is for you to continue learning and improving your s
 
 2.Learning to present information in different visual manners
 
-Requirements
+# Requirements
 
 You are required to create an effective presentation describing
 
